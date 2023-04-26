@@ -16,25 +16,17 @@ resource "aws_subnet" "primary" {
   }
 }
 
-resource "aws_subnet" "primary_2" {
+resource "aws_subnet" "primary" {
+  count             = 3
   vpc_id            = aws_vpc.primary.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1b"
+  cidr_block        = "10.0.${count.index}.0/24"
+  availability_zone = "us-west-1${char(96 + count.index + 1)}"
 
   tags = {
-    Name = "primary-subnet"
+    Name = "primary-subnet-${count.index}"
   }
 }
 
-resource "aws_subnet" "primary_3" {
-  vpc_id            = aws_vpc.primary.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1c"
-
-  tags = {
-    Name = "primary-subnet"
-  }
-}
 resource "aws_security_group" "aurora" {
   name_prefix = "aurora-db-sg"
   description = "Security group for Aurora Serverless database"
@@ -60,6 +52,6 @@ resource "aws_security_group" "aurora" {
 
 resource "aws_db_subnet_group" "aurora" {
   name        = "aurora-db-subnet-group"
-  subnet_ids  = [aws_subnet.primary.id, aws_subnet.primary_2.id, aws_subnet.primary_3.id]
+  subnet_ids  = [aws_subnet.primary.*.id]
   description = "Subnet group for Aurora Serverless database"
 }
