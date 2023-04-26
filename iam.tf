@@ -19,7 +19,7 @@ resource "aws_iam_role" "razorshop_db" {
 
 resource "aws_iam_policy" "razorshop_db" {
   name        = "razorshop-db-policy"
-  policy      = data.aws_iam_policy_document.example.json
+  policy      = data.aws_iam_policy_document.razorshop_db.json
 }
 
 data "aws_iam_policy_document" "razorshop_db" {

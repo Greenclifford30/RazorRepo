@@ -41,6 +41,6 @@ resource "aws_security_group" "aurora" {
 
 resource "aws_db_subnet_group" "aurora" {
   name        = "aurora-db-subnet-group"
-  subnet_ids  = [aws_subnet.aurora.id]
+  subnet_ids  = [aws_subnet.primary.id]
   description = "Subnet group for Aurora Serverless database"
 }
