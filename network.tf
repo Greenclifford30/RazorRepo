@@ -7,6 +7,7 @@ resource "aws_vpc" "primary" {
 }
 
 resource "aws_subnet" "primary" {
+  # SUBNET ISSUE Needs to be resolved
   count             = 3
   vpc_id            = aws_vpc.primary.id
   cidr_block        = "10.0.${count.index}.0/24"
