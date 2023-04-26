@@ -7,16 +7,6 @@ resource "aws_vpc" "primary" {
 }
 
 resource "aws_subnet" "primary" {
-  vpc_id            = aws_vpc.primary.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1a"
-
-  tags = {
-    Name = "primary-subnet"
-  }
-}
-
-resource "aws_subnet" "primary" {
   count             = 3
   vpc_id            = aws_vpc.primary.id
   cidr_block        = "10.0.${count.index}.0/24"
