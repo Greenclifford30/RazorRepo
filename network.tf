@@ -10,7 +10,7 @@ resource "aws_subnet" "primary" {
   count             = 3
   vpc_id            = aws_vpc.primary.id
   cidr_block        = "10.0.${count.index}.0/24"
-  availability_zone = "us-west-1${char(96 + count.index + 1)}"
+  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
 
   tags = {
     Name = "primary-subnet-${count.index}"
