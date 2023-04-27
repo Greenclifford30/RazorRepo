@@ -4,7 +4,7 @@ resource "aws_rds_cluster" "razorshop_db_cluster" {
   engine_mode        = "serverless"
   database_name      = "razorshopdb"
   master_username    = jsondecode(data.aws_secretsmanager_secret_version.aurora_creds.secret_string)["username"]
-  manage_master_user_password = true
+  master_password    = jsondecode(data.aws_secretsmanager_secret_version.aurora_creds.secret_string)["password"]
   backup_retention_period = 7
   preferred_backup_window = "03:00-04:00"
   deletion_protection = false
