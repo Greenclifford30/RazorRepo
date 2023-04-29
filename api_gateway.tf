@@ -99,7 +99,7 @@ resource "aws_api_gateway_method_response" "services_mock_method_response" {
 
 # Create a method for the POST /api/bookings endpoint
 resource "aws_api_gateway_method" "bookings" {
-  rest_api_id = aws_apigateway_rest_api.barbershop_api.id
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
   resource_id = aws_api_gateway_resource.bookings.id
   http_method = "POST"
 
@@ -177,14 +177,14 @@ integration {
 
 # Create a resource for the /api/bookings endpoint
 resource "aws_api_gateway_resource" "bookings" {
-  rest_api_id = aws_apigateway_rest_api.barbershop_api.id
-  parent_id   = aws_apigateway_rest_api.barbershop_api.root_resource_id
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
+  parent_id   = aws_api_gateway_rest_api.barbershop_api.root_resource_id
   path_part   = "bookings"
 }
 
 # Create a request validator for the POST /api/bookings endpoint
 resource "aws_api_gateway_request_validator" "bookings" {
-  rest_api_id = aws_apigateway_rest_api.bookings.id
+  rest_api_id = aws_api_gateway_rest_api.bookings.id
   name        = "bookings-request-validator"
   validate_request_body = true
 }
@@ -192,7 +192,7 @@ resource "aws_api_gateway_request_validator" "bookings" {
 
 
 resource "aws_api_gateway_method" "payments" {
-  rest_api_id = aws_apigateway_rest_api.barbershop_api.id
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
   resource_id = aws_api_gateway_resource.payments.id
   http_method = "POST"
 
@@ -265,7 +265,7 @@ resource "aws_api_gateway_method" "payments" {
 
 # Create a resource for the /api/payments endpoint
 resource "aws_api_gateway_resource" "payments" {
-  rest_api_id = aws_apigateway_rest_api.barbershop_api.id
-  parent_id   = aws_apigateway_rest_api.barbershop_api.root_resource_id
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
+  parent_id   = aws_api_gateway_rest_api.barbershop_api.root_resource_id
   path_part   = "payments"
 }
