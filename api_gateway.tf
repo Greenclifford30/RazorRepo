@@ -34,19 +34,19 @@ resource "aws_api_gateway_method" "services_method" {
     "application/json" = "Empty"
   }
 
-  integration {
-    type                   = "MOCK"
-    passthrough_behavior   = "WHEN_NO_MATCH"
-    http_method            = "POST"
-    request_templates      = {
-      "application/json" = jsonencode({
-        statusCode = "200"
-      })
-    }
-    integration_responses  = [aws_api_gateway_integration_response.services_mock_response]
-  }
+  # integration {
+  #   type                   = "MOCK"
+  #   passthrough_behavior   = "WHEN_NO_MATCH"
+  #   http_method            = "POST"
+  #   request_templates      = {
+  #     "application/json" = jsonencode({
+  #       statusCode = "200"
+  #     })
+  #   }
+  #   integration_responses  = [aws_api_gateway_integration_response.services_mock_response]
+  # }
 
-  method_responses      = [aws_api_gateway_method_response.services_mock_method_response]
+  # method_responses      = [aws_api_gateway_method_response.services_mock_method_response]
 }
 
 resource "aws_api_gateway_integration" "services_mock_integration" {
@@ -115,64 +115,64 @@ resource "aws_api_gateway_method" "bookings" {
 
   request_validator_id = aws_api_gateway_request_validator.bookings.id
 
-integration {
-    type                   = "MOCK"
-    passthrough_behavior   = "WHEN_NO_MATCH"
-    http_method            = "POST"
-    request_templates      = {
-      "application/json" = jsonencode({
-        statusCode = "200"
-      })
-    }
-    integration_responses  = [
-      {
-        status_code = "200"
-        response_templates = {
-          "application/json" = jsonencode({
-    "status": "success",
-    "message": "Booking created successfully.",
-    "data": {
-        "id": 1,
-        "user_id": 1,
-        "service_id": 1,
-        "start_time": "2023-04-24T10:00:00Z",
-        "end_time": "2023-04-24T10:30:00Z",
-        "status": "scheduled",
-        "created_at": "2023-04-23T12:00:00Z",
-        "updated_at": "2023-04-23T12:00:00Z"
-    }
-}
+# integration {
+#     type                   = "MOCK"
+#     passthrough_behavior   = "WHEN_NO_MATCH"
+#     http_method            = "POST"
+#     request_templates      = {
+#       "application/json" = jsonencode({
+#         statusCode = "200"
+#       })
+#     }
+#     integration_responses  = [
+#       {
+#         status_code = "200"
+#         response_templates = {
+#           "application/json" = jsonencode({
+#     "status": "success",
+#     "message": "Booking created successfully.",
+#     "data": {
+#         "id": 1,
+#         "user_id": 1,
+#         "service_id": 1,
+#         "start_time": "2023-04-24T10:00:00Z",
+#         "end_time": "2023-04-24T10:30:00Z",
+#         "status": "scheduled",
+#         "created_at": "2023-04-23T12:00:00Z",
+#         "updated_at": "2023-04-23T12:00:00Z"
+#     }
+# }
 
-)
-        }
-      },
-      {
-        selection_pattern = "4\\d{2}"
-        status_code       = "400"
-        response_templates = {
-          "application/json" = jsonencode({
-            status = "error"
-            message = "Bad request"
-          })
-        }
-      }
-    ]
-  }
+# )
+#         }
+#       },
+#       {
+#         selection_pattern = "4\\d{2}"
+#         status_code       = "400"
+#         response_templates = {
+#           "application/json" = jsonencode({
+#             status = "error"
+#             message = "Bad request"
+#           })
+#         }
+#       }
+#     ]
+#   }
 
-  method_responses = [
-    {
-      status_code       = "200"
-      response_models = {
-        "application/json" = "Empty"
-      }
-    },
-    {
-      status_code       = "400"
-      response_models = {
-        "application/json" = "Empty"
-      }
-    }
-  ]
+  # method_responses = [
+  #   {
+  #     status_code       = "200"
+  #     response_models = {
+  #       "application/json" = "Empty"
+  #     }
+  #   },
+  #   {
+  #     status_code       = "400"
+  #     response_models = {
+  #       "application/json" = "Empty"
+  #     }
+  #   }
+  # ]
 }
 
 # Create a resource for the /api/bookings endpoint
