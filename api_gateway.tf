@@ -128,6 +128,17 @@ resource "aws_api_gateway_request_validator" "bookings" {
   validate_request_body = true
 }
 
+resource "aws_api_gateway_integration" "bookings_integration" {
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
+  resource_id = aws_api_gateway_resource.bookings.id
+  http_method = aws_api_gateway_method.bookings.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = jsonencode({statusCode: 200})
+  }
+}
+
 resource "aws_api_gateway_integration_response" "bookings_integration_response_200" {
   rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
   resource_id = aws_api_gateway_resource.bookings.id
@@ -203,6 +214,16 @@ resource "aws_api_gateway_resource" "payments" {
   rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
   parent_id   = aws_api_gateway_rest_api.barbershop_api.root_resource_id
   path_part   = "payments"
+}
+resource "aws_api_gateway_integration" "payments_integration" {
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
+  resource_id = aws_api_gateway_resource.payments.id
+  http_method = aws_api_gateway_method.payments.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = jsonencode({statusCode: 200})
+  }
 }
 
 
