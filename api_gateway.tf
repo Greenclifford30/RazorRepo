@@ -172,7 +172,7 @@ resource "aws_api_gateway_integration_response" "bookings_integration_response_2
     EOF
   }
 
-
+  depends_on = [ aws_api_gateway_integration.bookings_integration ]
 }
 
 resource "aws_api_gateway_method_response" "bookings_method_response_200" {
@@ -283,4 +283,7 @@ resource "aws_api_gateway_integration_response" "payments_integration_response_2
 
     EOF
   }
+
+    depends_on = [ aws_api_gateway_integration.payments_integration ]
+
 }
