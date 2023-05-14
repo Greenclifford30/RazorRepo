@@ -29,20 +29,6 @@ resource "aws_api_gateway_method" "services_method" {
   request_parameters = {
     "method.request.header.Authorization" = true
   }
-
-  # integration {
-  #   type                   = "MOCK"
-  #   passthrough_behavior   = "WHEN_NO_MATCH"
-  #   http_method            = "POST"
-  #   request_templates      = {
-  #     "application/json" = jsonencode({
-  #       statusCode = "200"
-  #     })
-  #   }
-  #   integration_responses  = [aws_api_gateway_integration_response.services_mock_response]
-  # }
-
-  # method_responses      = [aws_api_gateway_method_response.services_mock_method_response]
 }
 
 resource "aws_api_gateway_integration" "services_mock_integration" {
@@ -52,7 +38,7 @@ resource "aws_api_gateway_integration" "services_mock_integration" {
   type        = "MOCK"
 
     request_templates = {
-    "application/json" = jsonencode({statusCode= 200})
+    "application/json" = jsonencode({statusCode: 200})
   }
 }
 
@@ -96,7 +82,6 @@ resource "aws_api_gateway_method_response" "services_mock_method_response_200" {
   }
 }
 
-
 # Create a method for the POST /api/bookings endpoint
 resource "aws_api_gateway_method" "bookings" {
   rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
@@ -110,69 +95,23 @@ resource "aws_api_gateway_method" "bookings" {
   }
 
   request_models = {
-    "application/json" = "Empty"
+    "application/json" = aws_api_gateway_model.bookings.name
   }
 
   request_validator_id = aws_api_gateway_request_validator.bookings.id
+}
 
-# integration {
-#     type                   = "MOCK"
-#     passthrough_behavior   = "WHEN_NO_MATCH"
-#     http_method            = "POST"
-#     request_templates      = {
-#       "application/json" = jsonencode({
-#         statusCode = "200"
-#       })
-#     }
-#     integration_responses  = [
-#       {
-#         status_code = "200"
-#         response_templates = {
-#           "application/json" = jsonencode({
-#     "status": "success",
-#     "message": "Booking created successfully.",
-#     "data": {
-#         "id": 1,
-#         "user_id": 1,
-#         "service_id": 1,
-#         "start_time": "2023-04-24T10:00:00Z",
-#         "end_time": "2023-04-24T10:30:00Z",
-#         "status": "scheduled",
-#         "created_at": "2023-04-23T12:00:00Z",
-#         "updated_at": "2023-04-23T12:00:00Z"
-#     }
-# }
 
-# )
-#         }
-#       },
-#       {
-#         selection_pattern = "4\\d{2}"
-#         status_code       = "400"
-#         response_templates = {
-#           "application/json" = jsonencode({
-#             status = "error"
-#             message = "Bad request"
-#           })
-#         }
-#       }
-#     ]
-#   }
-
-  # method_responses = [
-  #   {
-  #     status_code       = "200"
-  #     response_models = {
-  #       "application/json" = "Empty"
-  #     }
-  #   },
-  #   {
-  #     status_code       = "400"
-  #     response_models = {
-  #       "application/json" = "Empty"
-  #     }
-  #   }
-  # ]
+resource "aws_api_gateway_model" "bookings" {
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
+  name = "Bookings"
+  content_type = "application/json"
+  schema = <<EOF
+{
+    "service_id": 1,
+    "start_time": "2023-04-24T10:00:00Z"
+}
+EOF
 }
 
 # Create a resource for the /api/bookings endpoint
@@ -189,6 +128,32 @@ resource "aws_api_gateway_request_validator" "bookings" {
   validate_request_body = true
 }
 
+resource "aws_api_gateway_integration_response" "bookings_integration_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
+  resource_id = aws_api_gateway_resource.bookings.id
+  http_method = "POST"
+  status_code = 200
+  response_templates = {
+    "application/json" = <<EOF
+{
+    "status": "success",
+    "message": "Booking created successfully.",
+    "data": {
+        "id": 1,
+        "user_id": 1,
+        "service_id": 1,
+        "start_time": "2023-04-24T10:00:00Z",
+        "end_time": "2023-04-24T10:30:00Z",
+        "status": "scheduled",
+        "created_at": "2023-04-23T12:00:00Z",
+        "updated_at": "2023-04-23T12:00:00Z"
+    }
+}
+
+
+    EOF
+  }
+}
 
 
 resource "aws_api_gateway_method" "payments" {
@@ -203,13 +168,66 @@ resource "aws_api_gateway_method" "payments" {
   }
 
   request_models = {
-    "application/json" = "Empty"
+    "application/json" = aws_api_gateway_model.payments.name
   }
 }
+
+resource "aws_api_gateway_model" "payments" {
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
+  name = "Payments"
+  content_type = "application/json"
+  schema = <<EOF
+{
+  "type": "object",
+  "properties": {
+    "booking_id": {
+      "type": "integer"
+    },
+    "payment_amount": {
+      "type": "number"
+    },
+    "tip_amount": {
+      "type": "number"
+    },
+    "payment_method": {
+      "type": "string"
+    }
+  }
+}
+EOF
+}
+
 
 # Create a resource for the /api/payments endpoint
 resource "aws_api_gateway_resource" "payments" {
   rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
   parent_id   = aws_api_gateway_rest_api.barbershop_api.root_resource_id
   path_part   = "payments"
+}
+
+
+resource "aws_api_gateway_integration_response" "payments_integration_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
+  resource_id = aws_api_gateway_resource.payments.id
+  http_method = "POST"
+  status_code = 200
+  response_templates = {
+    "application/json" = <<EOF
+
+{
+    "status": "success",
+    "message": "Payment processed successfully.",
+    "data": {
+        "id": 1,
+        "booking_id": 1,
+        "user_id": 1,
+        "payment_amount": 25,
+        "tip_amount": 5,
+        "payment_status": "completed",
+        "payment_method": "stripe"
+    }
+}
+
+    EOF
+  }
 }
