@@ -56,11 +56,11 @@ resource "aws_api_gateway_integration_response" "services_mock_response" {
   rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
   resource_id = aws_api_gateway_resource.services_resource.id
   http_method = aws_api_gateway_method.services_method.http_method
-  status_code = "200"
+  status_code = 200
 
   response_templates = {
     "application/json" = jsonencode({
-      status = 200,
+      status = "success",
       data = [
         {
           id          = 1,
