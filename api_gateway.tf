@@ -50,6 +50,10 @@ resource "aws_api_gateway_integration" "services_mock_integration" {
   resource_id = aws_api_gateway_resource.services_resource.id
   http_method = aws_api_gateway_method.services_method.http_method
   type        = "MOCK"
+
+    request_templates = {
+    "application/json" = jsonencode({statusCode= 200})
+  }
 }
 
 resource "aws_api_gateway_integration_response" "services_mock_response" {
