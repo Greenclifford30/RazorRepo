@@ -106,12 +106,17 @@ resource "aws_api_gateway_model" "bookings" {
   rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
   name = "Bookings"
   content_type = "application/json"
-  schema = <<EOF
-{
-    "service_id": 1,
-    "start_time": "2023-04-24T10:00:00Z"
-}
-EOF
+  schema = jsonencode({
+    type = "object",
+    properties = {
+      service_id = {
+        type = number
+      }, 
+      start_time = { 
+        type = string
+      }
+    }
+  })
 }
 
 # Create a resource for the /api/bookings endpoint
@@ -164,6 +169,19 @@ resource "aws_api_gateway_integration_response" "bookings_integration_response_2
 
     EOF
   }
+
+
+}
+
+resource "aws_api_gateway_method_response" "bookings_method_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
+  resource_id = aws_api_gateway_resource.bookings.id
+  http_method = aws_api_gateway_method.bookings.http_method
+  status_code = 200
+
+  response_models = {
+    "application/json" = "Empty"
+  }
 }
 
 
@@ -188,23 +206,23 @@ resource "aws_api_gateway_model" "payments" {
   name = "Payments"
   content_type = "application/json"
   schema = <<EOF
-{
-  "type": "object",
-  "properties": {
-    "booking_id": {
-      "type": "integer"
-    },
-    "payment_amount": {
-      "type": "number"
-    },
-    "tip_amount": {
-      "type": "number"
-    },
-    "payment_method": {
-      "type": "string"
+    {
+      "type": "object",
+      "properties": {
+        "booking_id": {
+          "type": "integer"
+        },
+        "payment_amount": {
+          "type": "number"
+        },
+        "tip_amount": {
+          "type": "number"
+        },
+        "payment_method": {
+          "type": "string"
+        }
+      }
     }
-  }
-}
 EOF
 }
 
@@ -226,6 +244,18 @@ resource "aws_api_gateway_integration" "payments_integration" {
   }
 }
 
+
+
+resource "aws_api_gateway_method_response" "payments_method_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
+  resource_id = aws_api_gateway_resource.payments.id
+  http_method = aws_api_gateway_method.payments.http_method
+  status_code = 200
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+}
 
 resource "aws_api_gateway_integration_response" "payments_integration_response_200" {
   rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
