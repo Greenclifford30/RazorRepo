@@ -106,17 +106,19 @@ resource "aws_api_gateway_model" "bookings" {
   rest_api_id = aws_api_gateway_rest_api.barbershop_api.id
   name = "Bookings"
   content_type = "application/json"
-  schema = jsonencode({
-    type = "object",
-    properties = {
-      service_id = {
-        type = number
-      }, 
-      start_time = { 
-        type = string
+  schema = <<EOF
+    {
+      "type": "object",
+      "properties": {
+        "service_id": {
+          "type": "integer"
+        },
+        "start_time": {
+          "type": "string"
+        }
       }
     }
-  })
+EOF
 }
 
 # Create a resource for the /api/bookings endpoint
