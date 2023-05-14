@@ -30,10 +30,6 @@ resource "aws_api_gateway_method" "services_method" {
     "method.request.header.Authorization" = true
   }
 
-  request_models = {
-    "application/json" = "Empty"
-  }
-
   # integration {
   #   type                   = "MOCK"
   #   passthrough_behavior   = "WHEN_NO_MATCH"
@@ -64,7 +60,7 @@ resource "aws_api_gateway_integration_response" "services_mock_response" {
 
   response_templates = {
     "application/json" = jsonencode({
-      status = "success",
+      status = 200,
       data = [
         {
           id          = 1,
